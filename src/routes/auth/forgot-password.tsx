@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { ForgotPasswordForm } from '@/components/auth/forgot-password-form';
 
-export const Route = createFileRoute('/auth/sign-in')({
-  component: SignInPage,
+export const Route = createFileRoute('/auth/forgot-password')({
+  component: ForgotPasswordPage,
 });
 
-function SignInPage() {
+function ForgotPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 p-4">
       <div className="w-full max-w-md">
@@ -14,10 +14,10 @@ function SignInPage() {
             Football Tracker
           </h1>
           <p className="text-gray-600">
-            Track plays, manage your team, win games
+            Reset your password
           </p>
         </div>
-        <SignInForm />
+        <ForgotPasswordForm />
       </div>
     </div>
   );
