@@ -2,7 +2,7 @@ import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
 import { TanStackRouterRspack } from '@tanstack/router-plugin/rspack';
-import { InjectManifest } from 'workbox-webpack-plugin';
+// import { InjectManifest } from 'workbox-webpack-plugin';
 import {withZephyr} from "zephyr-rspack-plugin";
 
 const zephyrRsbuildPlugin = () => ({
@@ -24,16 +24,35 @@ export default defineConfig({
     }),
     zephyrRsbuildPlugin()
   ],
+  resolve: {
+    alias: {
+      '@': './src',
+      '@components': './src/components',
+      '@hooks': './src/hooks',
+      '@stores': './src/stores',
+      '@lib': './src/lib',
+      '@types': './src/types',
+      '@styles': './src/styles',
+    },
+  },
   tools: {
     rspack: {
       plugins: [
         TanStackRouterRspack(),
-        new InjectManifest({
-          swSrc: './src/sw.ts',
-          swDest: 'sw.js',
-          exclude: [/\.map$/, /^manifest.*\.js$/, /\.html$/],
-        }),
+        // new InjectManifest({
+        //   swSrc: './src/sw.ts',
+        //   swDest: 'sw.js',
+        //   exclude: [/\.map$/, /^manifest.*\.js$/, /\.html$/],
+        // }),
       ],
+    },
+    postcss: {
+      postcssOptions: (context) => {
+        return context.resourcePath.endsWith('.css')
+          // @ts-expect-error
+          ? { plugins: [require('@tailwindcss/postcss')] }
+          : {};
+      },
     },
   },
   html: {
@@ -48,15 +67,6 @@ export default defineConfig({
   source: {
     entry: {
       index: './src/main.tsx',
-    },
-    alias: {
-      '@': './src',
-      '@components': './src/components',
-      '@hooks': './src/hooks',
-      '@stores': './src/stores',
-      '@lib': './src/lib',
-      '@types': './src/types',
-      '@styles': './src/styles',
     },
     define: {
       'import.meta.env.PUBLIC_SUPABASE_URL': JSON.stringify(

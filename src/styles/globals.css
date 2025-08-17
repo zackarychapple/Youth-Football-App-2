@@ -1,6 +1,4 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import 'tailwindcss';
 
 @layer base {
   :root {
@@ -62,11 +60,12 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -80,12 +79,15 @@
   select, 
   textarea {
     min-height: 3rem; /* 48px */
-    @apply px-4;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   
   /* Focus visible styles */
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-primary;
+    outline-width: 2px;
+    outline-offset: 2px;
+    outline-color: hsl(var(--primary));
   }
   
   /* Prevent text selection on interactive elements */
