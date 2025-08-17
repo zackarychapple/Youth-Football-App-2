@@ -11,6 +11,8 @@
 **Priority:** P0  
 **Duration:** 4 hours  
 **Dependencies:** None  
+**Scheduled:** 2025-08-18 (Day 2 Morning)  
+**ETA:** 2025-08-18 (Day 2 Noon)  
 
 **Description:**  
 Initialize the frontend application with Rsbuild, configure TanStack Router, and set up the development environment.
@@ -181,6 +183,8 @@ Integrate TanStack Query with Supabase client for data fetching and mutations.
 **Priority:** P0  
 **Duration:** 2 hours  
 **Dependencies:** None  
+**Scheduled:** 2025-08-18 (Day 2 Morning - FIRST PRIORITY)  
+**ETA:** 2025-08-18 (Day 2 by 10 AM)  
 
 **Description:**  
 Initialize Supabase project and configure authentication providers.
@@ -220,6 +224,8 @@ Design and implement the core database schema with RLS policies.
 - [ ] RLS policies for all tables
 - [ ] Indexes for common queries
 - [ ] Soft delete implementation
+- [ ] **CRITICAL: Generate TypeScript types immediately after schema creation**
+- [ ] **CRITICAL: Share types file with UI Engineer by 2 PM**
 
 **Deliverables:**
 - `/supabase/migrations/001_initial_schema.sql`
@@ -340,14 +346,12 @@ Configure real-time subscriptions for collaborative features.
 
 ## Week 1 Daily Objectives
 
-### Monday (Day 1)
-**UI Engineer:**
-- Complete TASK-UI-001 (Project Setup)
-- Begin TASK-UI-002 (Auth UI)
-
-**Supabase Architect:**
-- Complete TASK-SA-001 (Supabase Setup)
-- Begin TASK-SA-002 (Schema Design)
+### Monday (Day 1) ✅ COMPLETE
+**Planning & Documentation Day**
+- Sprint Plan delivered
+- Component Specifications delivered
+- Database Migration Plan delivered
+- API Specifications delivered
 
 ### Tuesday (Day 2)
 **UI Engineer:**
@@ -438,7 +442,11 @@ Configure real-time subscriptions for collaborative features.
 
 ### Critical Handoffs
 
-1. **Day 2: Authentication API → UI**
+1. **Day 2 Morning: Project Credentials**
+   - SA provides Supabase URL and anon key by 10 AM
+   - UI Engineer blocked until credentials received
+   
+2. **Day 2 Afternoon: Authentication API → UI**
    - SA provides auth endpoints
    - UI implements auth screens
 
