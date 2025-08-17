@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate, Link } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -33,7 +32,6 @@ const signUpSchema = z.object({
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export function SignUpForm() {
-  const navigate = useNavigate();
   const { signUp, error: authError, clearError } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [tab, setTab] = useState<'create' | 'join'>('create');
@@ -75,7 +73,7 @@ export function SignUpForm() {
           joinCode: data.joinCode,
         });
       }
-      navigate({ to: '/dashboard' });
+      window.location.href = '/dashboard';
     } catch (error) {
       console.error('Sign up error:', error);
     } finally {
@@ -169,7 +167,7 @@ export function SignUpForm() {
                     {...register('teamName')}
                   />
                 </div>
-                {tab === 'create' && !register('teamName').value && (
+                {tab === 'create' && (
                   <p className="text-sm text-muted-foreground">
                     Enter your team's name
                   </p>
@@ -256,12 +254,12 @@ export function SignUpForm() {
       <CardFooter>
         <p className="text-sm text-center w-full text-muted-foreground">
           Already have an account?{' '}
-          <Link
-            to="/auth/sign-in"
+          <a
+            href="/auth/sign-in"
             className="font-medium text-primary hover:underline"
           >
             Sign in
-          </Link>
+          </a>
         </p>
       </CardFooter>
     </Card>

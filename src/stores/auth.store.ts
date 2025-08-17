@@ -161,19 +161,18 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true, error: null });
         try {
           const { supabase } = await import('@/lib/supabase');
-          const { db } = await import('@/lib/database.helpers');
           
           if (!get().user) throw new Error('User must be authenticated');
           
-          // Create team with coach
-          const result = await db.teams.createWithCoach({
-            teamName: data.teamName,
-            userId: get().user!.id,
-            email: data.email,
-            coachName: data.name,
+          // Use the create_team_with_coach RPC function
+          const { data: result, error } = await supabase.rpc('create_team_with_coach', {
+            p_team_name: data.teamName,
+            p_user_id: get().user!.id,
+            p_email: data.email,
+            p_coach_name: data.name,
           });
           
-          if (!result.success) throw new Error(result.error);
+          if (error) throw error;
           
           // Load user teams to update state
           await get().loadUserTeams();
@@ -196,7 +195,7 @@ export const useAuthStore = create<AuthStore>()(
           
           if (!user) throw new Error('User must be authenticated');
           
-          const { data, error } = await supabase.rpc('join_team_with_code', {
+          const { error } = await supabase.rpc('join_team_with_code', {
             p_invite_code: code,
             p_user_id: user.id,
             p_email: user.email!,
@@ -318,7 +317,7 @@ export const useAuthStore = create<AuthStore>()(
           const currentCoach = coaches && coaches[0] ? coaches[0] : null;
           
           set({
-            teams: teams?.map(t => ({
+            teams: teams?.map((t: any) => ({
               id: t.team_id,
               name: t.team_name,
               invite_code: t.invite_code,

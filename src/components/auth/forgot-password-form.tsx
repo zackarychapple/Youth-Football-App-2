@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate, Link } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -24,7 +23,6 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordForm() {
-  const navigate = useNavigate();
   const { resetPassword, error: authError, clearError } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -84,13 +82,13 @@ export function ForgotPasswordForm() {
           </Button>
         </CardContent>
         <CardFooter>
-          <Link
-            to="/auth/sign-in"
+          <a
+            href="/auth/sign-in"
             className="flex items-center justify-center w-full text-sm text-primary hover:underline"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to sign in
-          </Link>
+          </a>
         </CardFooter>
       </Card>
     );
@@ -150,13 +148,13 @@ export function ForgotPasswordForm() {
         </form>
       </CardContent>
       <CardFooter>
-        <Link
-          to="/auth/sign-in"
+        <a
+          href="/auth/sign-in"
           className="flex items-center justify-center w-full text-sm text-primary hover:underline"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to sign in
-        </Link>
+        </a>
       </CardFooter>
     </Card>
   );
