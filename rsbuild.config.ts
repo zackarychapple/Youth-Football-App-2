@@ -3,6 +3,18 @@ import { pluginReact } from '@rsbuild/plugin-react';
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
 import { TanStackRouterRspack } from '@tanstack/router-plugin/rspack';
 import { InjectManifest } from 'workbox-webpack-plugin';
+import {withZephyr} from "zephyr-rspack-plugin";
+
+const zephyrRsbuildPlugin = () => ({
+  name: 'zephyr-rsbuild-plugin',
+  setup(api: { modifyRspackConfig: (config: any) => Promise<void> }) {
+    api.modifyRspackConfig(async (config: any) => {
+      // this is important to avoid multiple zephyr build triggers
+      config.name === 'web' && (await withZephyr()(config));
+    });
+  },
+});
+
 
 export default defineConfig({
   plugins: [
@@ -10,6 +22,7 @@ export default defineConfig({
     pluginTypeCheck({
       enable: process.env.NODE_ENV === 'production',
     }),
+    zephyrRsbuildPlugin()
   ],
   tools: {
     rspack: {
@@ -50,7 +63,7 @@ export default defineConfig({
         process.env.PUBLIC_SUPABASE_URL || 'https://yepriyrcjmlmhrwpgqka.supabase.co'
       ),
       'import.meta.env.PUBLIC_SUPABASE_ANON_KEY': JSON.stringify(
-        process.env.PUBLIC_SUPABASE_ANON_KEY || 
+        process.env.PUBLIC_SUPABASE_ANON_KEY ||
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InllcHJpeXJjam1sbWhyd3BncWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzODk5OTcsImV4cCI6MjA3MDk2NTk5N30.Fo2U0TWiROv-mru9PIrFSEfAk2rBpzp_vpTiahVVjvE'
       ),
     },
