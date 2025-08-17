@@ -1,0 +1,31 @@
+{
+  "team": "Lassiter Jr. Trojans",
+  "grade": "2nd",
+  "players": [
+    { "number": 1, "name": "Chris Martin" },
+    { "number": 2, "name": "Conor Orsenigo" },
+    { "number": 5, "name": "Lucca Olivella" },
+    { "number": 6, "name": "Jaxon Ford" },
+    { "number": 7, "name": "Weston Chapple" },
+    { "number": 9, "name": "Dominic Gilene" },
+    { "number": 10, "name": "Owen Resnick" },
+    { "number": 11, "name": "Ryder Ross" },
+    { "number": 12, "name": "Khalil Jones" },
+    { "number": 14, "name": "Nicolas \"Nico\" Best" },
+    { "number": 15, "name": "Gabriel Williams" },
+    { "number": 22, "name": "Benjamin Mikula" },
+    { "number": 23, "name": "Logan Norman" },
+    { "number": 43, "name": "Boston Hicks" },
+    { "number": 88, "name": "Camden Dzimwasha" },
+    { "number": 89, "name": "Cole Frost" },
+    { "number": 92, "name": "Jackson Elkins" },
+    { "number": 99, "name": "Wade Corso" }
+  ],
+  "coaches": [
+    "Coach Rome",
+    "Coach Greg",
+    "Coach Norris",
+    "Coach Ashton",
+    "Coach Zack"
+  ]
+}

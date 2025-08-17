@@ -364,16 +364,36 @@ Configure real-time subscriptions for collaborative features.
 - ✅ Complete TASK-SA-003 (Auth Functions)
 - ✅ Database helpers with offline patterns
 
-### Wednesday (Day 3) - REVISED PRIORITIES
+### Wednesday (Day 3) - IN PROGRESS
 **UI Engineer:**
-- Complete TASK-UI-003 (Team/Player Management)
-- NEW: Game creation interface
-- NEW: Play tracking UI foundation (if time)
+- PRIORITY 1: Player Roster Management (9 AM - 1 PM)
+  - Quick add interface with auto-increment jersey numbers
+  - Bulk import from CSV/Excel paste
+  - Swipe gestures for edit/delete
+  - Mark players as "striped"
+  - Target: 20 players in < 2 minutes
+- PRIORITY 2: Game Creation Flow (1 PM - 4 PM)
+  - One-tap quick start with defaults
+  - Optional opponent/settings
+  - Roster snapshot to game
+- PRIORITY 3: Play Tracking UI Foundation (4 PM - 6 PM)
+  - 5x5 player grid
+  - Play type buttons
+  - Quarter management
 
 **Supabase Architect:**
-- NEW: Game management functions
-- NEW: MPR calculation engine
-- Begin TASK-SA-004 (Offline Sync) if time
+- PRIORITY 1: Game Management Functions (9 AM - 12 PM)
+  - create_game_with_roster RPC
+  - Game state management
+  - Roster snapshot process
+- PRIORITY 2: MPR Calculation Engine (12 PM - 3 PM)
+  - Real-time MPR calculations
+  - Substitution recommendations
+  - Materialized view for performance
+- PRIORITY 3: Play Recording System (3 PM - 5 PM)
+  - record_play with participants
+  - Undo functionality
+  - Play history retrieval
 
 ### Thursday (Day 4)
 **UI Engineer:**
@@ -446,23 +466,34 @@ Configure real-time subscriptions for collaborative features.
 
 ### Critical Handoffs
 
-1. **Day 2 Morning: Project Credentials**
+1. **Day 2 Morning: Project Credentials** ✅ COMPLETE
    - SA provides Supabase URL and anon key by 10 AM
    - UI Engineer blocked until credentials received
    
-2. **Day 2 Afternoon: Authentication API → UI**
+2. **Day 2 Afternoon: Authentication API → UI** ✅ COMPLETE
    - SA provides auth endpoints
    - UI implements auth screens
 
-2. **Day 3: Database Schema → UI Models**
-   - SA provides TypeScript types
-   - UI updates Zustand stores
+3. **Day 3 Morning: Player Data Structure** (11 AM)
+   - SA confirms player table fields
+   - UI implements roster store
+   - Agree on bulk import format
 
-3. **Day 6: Offline Sync → State Management**
+4. **Day 3 Afternoon: Game Creation API** (2 PM)
+   - SA provides create_game_with_roster RPC
+   - UI calls from game creation flow
+   - Return game ID for tracking
+
+5. **Day 3 Late: Play Recording Integration** (4 PM)
+   - SA provides record_play function
+   - UI sends player selections
+   - MPR calculations trigger automatically
+
+6. **Day 6: Offline Sync → State Management**
    - SA provides sync queue API
    - UI implements offline store
 
-4. **Day 8: Real-time → UI Subscriptions**
+7. **Day 8: Real-time → UI Subscriptions**
    - SA provides subscription channels
    - UI implements live updates
 
@@ -541,11 +572,68 @@ Before starting any task:
 
 ## Notes Section
 
-### UI Engineer Notes
-_Space for implementation notes, decisions, and discoveries_
+### UI Engineer Notes - Day 3
+**Roster Management Implementation Guide:**
+- Use TanStack Router file-based routing for /roster/* pages
+- Leverage existing button/form components from /components/ui/
+- For bulk import: Accept these formats:
+  - "Name, Number" (comma separated)
+  - "Name\tNumber" (tab separated from Excel)
+  - "Name" only (auto-assign numbers)
+- Virtual scrolling: Use TanStack Virtual for 20+ players
+- Swipe gestures: Use touch-action CSS and pointer events
+- Store jersey numbers in Zustand, sync to DB on blur
 
-### Supabase Architect Notes
-_Space for schema decisions, performance findings, and gotchas_
+**Game Creation Quick Start:**
+```typescript
+// One-tap defaults
+const quickStartGame = {
+  opponent: "TBD",
+  homeAway: "home",
+  quarterMinutes: 8,
+  status: "active"
+}
+```
 
-### PM Notes
-_Space for requirement clarifications and scope decisions_
+### Supabase Architect Notes - Day 3
+**Game Functions Implementation:**
+```sql
+-- CRITICAL: Snapshot roster at game creation
+-- This preserves player list even if roster changes later
+INSERT INTO game_players (game_id, player_id, jersey_number, is_striped)
+SELECT @game_id, id, jersey_number, is_striped
+FROM players WHERE team_id = @team_id;
+```
+
+**MPR Calculation Notes:**
+- CFL requires 8 plays minimum per game
+- Track by quarter for substitution recommendations
+- Use JSONB for play_data to store player arrays
+- Index on game_id + quarter for performance
+
+**Play Recording Structure:**
+```typescript
+interface PlayData {
+  type: 'run' | 'pass' | 'penalty'
+  players: string[] // array of player IDs
+  quarter: number
+  timestamp: number
+  result?: 'complete' | 'incomplete' | 'touchdown'
+}
+```
+
+### PM Notes - Day 3 Priorities
+**Critical Success Factors:**
+1. **Speed over features** - Coach should add full roster in 2 minutes
+2. **One-tap game start** - Don't make coaches fill forms during pregame chaos
+3. **Forgiveness** - Every action must be undoable (delete player, wrong play, etc.)
+4. **Offline-first** - Assume network will fail at crucial moments
+
+**User Story Reality Check:**
+*"It's 8:45 AM, game starts at 9:00. Coach just arrived at field. Half the parents are asking questions. Three kids forgot their cleats. The other team is warming up. Coach needs to enter the roster NOW and start tracking plays in 15 minutes."*
+
+This is why we need:
+- Bulk import (paste from email/spreadsheet)
+- One-tap game start
+- No required fields except essentials
+- Everything else can be "fixed later"

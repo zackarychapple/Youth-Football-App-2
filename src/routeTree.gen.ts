@@ -10,19 +10,38 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RosterIndexRouteImport } from './routes/roster/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as OnboardingTeamRouteImport } from './routes/onboarding/team'
+import { Route as GamesNewRouteImport } from './routes/games/new'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as GamesGameIdIndexRouteImport } from './routes/games/$gameId/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RosterIndexRoute = RosterIndexRouteImport.update({
+  id: '/roster/',
+  path: '/roster/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingTeamRoute = OnboardingTeamRouteImport.update({
+  id: '/onboarding/team',
+  path: '/onboarding/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GamesNewRoute = GamesNewRouteImport.update({
+  id: '/games/new',
+  path: '/games/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
@@ -40,20 +59,33 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
   path: '/auth/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GamesGameIdIndexRoute = GamesGameIdIndexRouteImport.update({
+  id: '/games/$gameId/',
+  path: '/games/$gameId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/games/new': typeof GamesNewRoute
+  '/onboarding/team': typeof OnboardingTeamRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/roster': typeof RosterIndexRoute
+  '/games/$gameId': typeof GamesGameIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/games/new': typeof GamesNewRoute
+  '/onboarding/team': typeof OnboardingTeamRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/roster': typeof RosterIndexRoute
+  '/games/$gameId': typeof GamesGameIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,7 +93,11 @@ export interface FileRoutesById {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/games/new': typeof GamesNewRoute
+  '/onboarding/team': typeof OnboardingTeamRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/roster/': typeof RosterIndexRoute
+  '/games/$gameId/': typeof GamesGameIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -70,21 +106,33 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/games/new'
+    | '/onboarding/team'
     | '/dashboard'
+    | '/roster'
+    | '/games/$gameId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth/forgot-password'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/games/new'
+    | '/onboarding/team'
     | '/dashboard'
+    | '/roster'
+    | '/games/$gameId'
   id:
     | '__root__'
     | '/'
     | '/auth/forgot-password'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/games/new'
+    | '/onboarding/team'
     | '/dashboard/'
+    | '/roster/'
+    | '/games/$gameId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -92,7 +140,11 @@ export interface RootRouteChildren {
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthSignInRoute: typeof AuthSignInRoute
   AuthSignUpRoute: typeof AuthSignUpRoute
+  GamesNewRoute: typeof GamesNewRoute
+  OnboardingTeamRoute: typeof OnboardingTeamRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  RosterIndexRoute: typeof RosterIndexRoute
+  GamesGameIdIndexRoute: typeof GamesGameIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -104,11 +156,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/roster/': {
+      id: '/roster/'
+      path: '/roster'
+      fullPath: '/roster'
+      preLoaderRoute: typeof RosterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/team': {
+      id: '/onboarding/team'
+      path: '/onboarding/team'
+      fullPath: '/onboarding/team'
+      preLoaderRoute: typeof OnboardingTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/games/new': {
+      id: '/games/new'
+      path: '/games/new'
+      fullPath: '/games/new'
+      preLoaderRoute: typeof GamesNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/sign-up': {
@@ -132,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/games/$gameId/': {
+      id: '/games/$gameId/'
+      path: '/games/$gameId'
+      fullPath: '/games/$gameId'
+      preLoaderRoute: typeof GamesGameIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -140,7 +220,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthSignInRoute: AuthSignInRoute,
   AuthSignUpRoute: AuthSignUpRoute,
+  GamesNewRoute: GamesNewRoute,
+  OnboardingTeamRoute: OnboardingTeamRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  RosterIndexRoute: RosterIndexRoute,
+  GamesGameIdIndexRoute: GamesGameIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

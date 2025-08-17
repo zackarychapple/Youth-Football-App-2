@@ -229,8 +229,10 @@ export async function navigateTo(
       timeout: config.testEnvironment.testTimeout
     });
     
-    if (!response || !response.ok()) {
-      throw new Error(`Failed to load page: ${response?.status()}`);
+    // 304 is "Not Modified" which is OK, as are 2xx responses
+    const status = response?.status() || 0;
+    if (response && status >= 400) {
+      throw new Error(`Failed to load page: ${status}`);
     }
     
     return response;

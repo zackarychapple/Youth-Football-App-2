@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
@@ -21,7 +21,7 @@ import { useOfflineStore } from '@/stores/offline.store';
 const signInSchema = z.object({
   email: z.string().email('Please enter a valid email'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  rememberMe: z.boolean().optional().default(false),
+  rememberMe: z.boolean().default(false),
 });
 
 type SignInFormData = z.infer<typeof signInSchema>;
@@ -38,7 +38,7 @@ export function SignInForm() {
     setValue,
     watch,
   } = useForm<SignInFormData>({
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(signInSchema) as any,
     defaultValues: {
       email: '',
       password: '',
@@ -48,7 +48,7 @@ export function SignInForm() {
 
   const rememberMe = watch('rememberMe');
 
-  const onSubmit = async (data: SignInFormData) => {
+  const onSubmit: SubmitHandler<SignInFormData> = async (data) => {
     if (!isOnline) {
       // Queue for later when online - simplified for now
       console.log('Offline sign-in queued');

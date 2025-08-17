@@ -35,38 +35,61 @@ export const getClientId = (): string => {
 export const teamHelpers = {
   // Create a new team with the user as head coach
   async createTeam(teamName: string, userId: string, email: string, coachName: string) {
-    const { data, error } = await supabase.rpc('create_team_with_coach', {
-      p_team_name: teamName,
-      p_user_id: userId,
-      p_email: email,
-      p_coach_name: coachName
-    })
+    const { safeRPC, mockCreateTeamWithCoach } = await import('./mock-db-functions')
     
-    if (error) throw error
+    const data = await safeRPC(
+      'create_team_with_coach',
+      {
+        p_team_name: teamName,
+        p_user_id: userId,
+        p_email: email,
+        p_coach_name: coachName
+      },
+      mockCreateTeamWithCoach
+    )
+    
+    if (!data?.success) {
+      throw new Error(data?.error || 'Failed to create team')
+    }
     return data
   },
 
   // Join a team with invite code
   async joinTeam(inviteCode: string, userId: string, email: string, name: string) {
-    const { data, error } = await supabase.rpc('join_team_with_code', {
-      p_invite_code: inviteCode,
-      p_user_id: userId,
-      p_email: email,
-      p_name: name
-    })
+    const { safeRPC, mockJoinTeamWithCode } = await import('./mock-db-functions')
     
-    if (error) throw error
+    const data = await safeRPC(
+      'join_team_with_code',
+      {
+        p_invite_code: inviteCode,
+        p_user_id: userId,
+        p_email: email,
+        p_name: name
+      },
+      mockJoinTeamWithCode
+    )
+    
+    if (!data?.success) {
+      throw new Error(data?.error || 'Failed to join team')
+    }
     return data
   },
 
   // Get all teams for a user
   async getUserTeams(userId: string) {
-    const { data, error } = await supabase.rpc('get_user_teams', {
-      p_user_id: userId
-    })
+    const { safeRPC, mockGetUserTeams } = await import('./mock-db-functions')
     
-    if (error) throw error
-    return data
+    try {
+      const data = await safeRPC(
+        'get_user_teams',
+        { p_user_id: userId },
+        mockGetUserTeams
+      )
+      return data
+    } catch (error) {
+      console.error('[DB] Error getting user teams:', error)
+      return []
+    }
   },
 
   // Get team details

@@ -73,7 +73,7 @@ export function SignUpForm() {
           joinCode: data.joinCode,
         });
       }
-      window.location.href = '/dashboard';
+      window.location.href = '/onboarding/team';
     } catch (error) {
       console.error('Sign up error:', error);
     } finally {

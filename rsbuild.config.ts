@@ -47,9 +47,8 @@ export default defineConfig({
       ],
     },
     postcss: {
-      postcssOptions: (context) => {
+      postcssOptions: (context: any) => {
         return context.resourcePath.endsWith('.css')
-          // @ts-expect-error
           ? { plugins: [require('@tailwindcss/postcss')] }
           : {};
       },
@@ -120,7 +119,6 @@ export default defineConfig({
   server: {
     port: 3000,
     host: 'localhost',
-    https: false,
   },
   dev: {
     hmr: true,

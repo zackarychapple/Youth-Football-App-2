@@ -78,9 +78,15 @@ export async function login(
       
       const currentUrl = context.page.url();
       const isDashboard = currentUrl.includes('/dashboard');
+      const isOnboarding = currentUrl.includes('/onboarding');
+      const isAuthenticated = isDashboard || isOnboarding;
       
-      if (isDashboard) {
-        console.log('✅ Login successful - redirected to dashboard');
+      if (isAuthenticated) {
+        if (isDashboard) {
+          console.log('✅ Login successful - redirected to dashboard');
+        } else if (isOnboarding) {
+          console.log('✅ Login successful - redirected to onboarding (new user)');
+        }
         await captureScreenshot(context, 'login-success');
         return true;
       } else {
@@ -171,8 +177,11 @@ export async function isLoggedIn(context: TestContext): Promise<boolean> {
     return false;
   }
   
-  // Check for auth elements
-  const hasLogoutButton = await elementExists(context, 'button:has-text("Sign Out"), a:has-text("Sign Out")');
+  // Check for auth elements using XPath or text content
+  const hasLogoutButton = await context.page.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll('button, a'));
+    return buttons.some(el => el.textContent?.includes('Sign Out'));
+  });
   const hasLoginForm = await elementExists(context, 'input[type="email"], input[type="password"]');
   
   return hasLogoutButton && !hasLoginForm;
@@ -183,19 +192,16 @@ export async function isLoggedIn(context: TestContext): Promise<boolean> {
  */
 export async function getErrorMessage(context: TestContext): Promise<string | null> {
   try {
-    // Common error message selectors
+    // Common error message selectors - using valid CSS only
     const errorSelectors = [
       '[role="alert"]',
       '.text-destructive',
       '.error-message',
-      '.alert-error',
-      'div:has-text("error")',
-      'div:has-text("invalid")',
-      'div:has-text("incorrect")'
+      '.alert-error'
     ];
     
     for (const selector of errorSelectors) {
-      if (await elementExists(context, selector)) {
+      try {
         const element = await context.page.$(selector);
         if (element) {
           const text = await element.evaluate(el => el.textContent);
@@ -203,12 +209,14 @@ export async function getErrorMessage(context: TestContext): Promise<string | nu
             return text.trim();
           }
         }
+      } catch {
+        // Skip invalid selector
       }
     }
     
     return null;
   } catch (error) {
-    console.error(`Error getting error message: ${error}`);
+    // Silently handle errors
     return null;
   }
 }
